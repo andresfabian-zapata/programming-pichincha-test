@@ -9,7 +9,6 @@ public class WithdrawalMovementStrategy implements MovementStrategy {
     @Override
     public void calculateBalance(Movement movement, BigDecimal lastBalance) {
         if(movement.getAmmount().compareTo(lastBalance) > 0) {
-            //Hay que arrojar error, indicando que se intenta retirar más que el saldo existente
             BigDecimal finalBalance = lastBalance;
             movement.setBalance(finalBalance);
             movement.setState(false);

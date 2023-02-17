@@ -3,6 +3,7 @@ package com.programmingtest.movementservice.controller;
 import com.programmingtest.movementservice.dto.MovementGetDto;
 import com.programmingtest.movementservice.dto.MovementPostDto;
 import com.programmingtest.movementservice.dto.MovementPostRequest;
+import com.programmingtest.movementservice.model.Movement;
 import com.programmingtest.movementservice.service.MovementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,8 @@ public class MovementController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String addMovements(@RequestBody MovementPostRequest movementPostRequest) {
-        movementService.addMovements(movementPostRequest);
-        return "Movimientos agregados: " + movementPostRequest.getMovements().size();
+        List<Movement> movements = movementService.addMovements(movementPostRequest);
+        return "Movimientos agregados: " + movements.stream().filter(m -> m.getState()).count();
     }
 
     @GetMapping

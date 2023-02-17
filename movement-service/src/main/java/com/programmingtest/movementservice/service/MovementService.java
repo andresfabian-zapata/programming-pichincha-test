@@ -27,9 +27,10 @@ public class MovementService {
     private final MovementMapper movementMapper;
     private final AccountServiceFeign accountServiceFeign;
 
-    public void addMovements(MovementPostRequest movementPostRequest) {
+    public List<Movement> addMovements(MovementPostRequest movementPostRequest) {
         List<Movement> movements = setBalances(movementMapper.movementsPostDtoToMovements(movementPostRequest.getMovements()));
         movementRepository.saveAll(movements);
+        return movements;
     }
 
     private List<Movement> setBalances(List<Movement> movements) {

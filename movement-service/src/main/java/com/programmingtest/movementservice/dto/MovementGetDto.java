@@ -17,6 +17,7 @@ public class MovementGetDto {
     private String date;
     private MovementType type;
     private BigDecimal ammount;
+    private Boolean state;
     private BigDecimal balance;
 
 }
