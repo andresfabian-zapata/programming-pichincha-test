@@ -15,7 +15,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Movement {
+public class    Movement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,5 +28,9 @@ public class Movement {
     private MovementType type;
     private BigDecimal ammount;
     private BigDecimal balance;
+    private Boolean state;
+
+    @Column(name = "account_number")
+    private String accountNumber;
 
 }

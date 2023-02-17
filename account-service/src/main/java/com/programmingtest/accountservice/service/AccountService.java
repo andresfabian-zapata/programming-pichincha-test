@@ -3,12 +3,15 @@ package com.programmingtest.accountservice.service;
 import com.programmingtest.accountservice.dto.AccountGetResponse;
 import com.programmingtest.accountservice.dto.AccountPostDto;
 import com.programmingtest.accountservice.dto.AccountRequest;
+import com.programmingtest.accountservice.model.Account;
 import com.programmingtest.accountservice.model.ClientProxy;
 import com.programmingtest.accountservice.repository.AccountRepository;
 import com.programmingtest.accountservice.service.mapper.AccountMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,12 +43,23 @@ public class AccountService {
         return true;
     }
 
-    public List<AccountGetResponse> getAccounts () {
-        List<AccountGetResponse> accountGetResponses = accountMapper.accountsToAccountsGetResponse(accountRepository.findAll());
+    public List<AccountGetResponse> getAccounts(String accountNumber) {
+        if (accountNumber == null || accountNumber.isEmpty()) {
+            return setClientInformation(accountMapper.accountsToAccountsGetResponse(accountRepository.findAll()));
+        }
+
+        Account account = accountRepository.findByNumber(accountNumber);
+        if (account == null) {
+            return new ArrayList<>();
+        }
+        return setClientInformation(accountMapper.accountsToAccountsGetResponse(Arrays.asList(account)));
+    }
+
+    private List<AccountGetResponse> setClientInformation(List<AccountGetResponse> accountGetResponses) {
         for (AccountGetResponse accountGetResponse : accountGetResponses) {
-                ClientProxy clientProxy = getClientById(accountGetResponse.getClient_id());
-                accountGetResponse.setClient(clientProxy);
-            }
+            ClientProxy clientProxy = getClientById(accountGetResponse.getClient_id());
+            accountGetResponse.setClient(clientProxy);
+        }
         return accountGetResponses;
     }
 

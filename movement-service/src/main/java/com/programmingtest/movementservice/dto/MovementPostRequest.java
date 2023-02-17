@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovementRequest {
+public class MovementPostRequest {
 
-    List<MovementDto> movements;
+    List<MovementPostDto> movements;
 }
