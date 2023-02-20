@@ -3,16 +3,20 @@ package com.programmingtest.accountservice.service;
 import com.programmingtest.accountservice.dto.AccountGetResponse;
 import com.programmingtest.accountservice.dto.AccountPostDto;
 import com.programmingtest.accountservice.dto.AccountRequest;
+import com.programmingtest.accountservice.dto.AccountUpdate;
+import com.programmingtest.accountservice.exception.ResourceNotFoundException;
 import com.programmingtest.accountservice.model.Account;
 import com.programmingtest.accountservice.model.ClientProxy;
 import com.programmingtest.accountservice.repository.AccountRepository;
 import com.programmingtest.accountservice.service.mapper.AccountMapper;
+import com.programmingtest.accountservice.service.mapper.AccountPatchMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +25,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final AccountPatchMapper accountPatchMapper;
 
     private final ClientServiceFeign clientFeignClient;
 
@@ -70,6 +75,27 @@ public class AccountService {
         return null;
     }
 
+    public AccountUpdate patchAccountId(Long id, AccountUpdate request) {
+        Account existingAccount = accountRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Client", "id", id));
+        accountPatchMapper.accountUpdateToAccount(request, existingAccount);
+        return accountMapper.accountToAccountUpdate(accountRepository.save(existingAccount));
+    }
+
+    public AccountUpdate putAccountId(Long id, AccountUpdate request) {
+        Account existingAccount = accountRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Client", "id", id));
+        accountMapper.accountUpdateToAccount(request, existingAccount);
+        return accountMapper.accountToAccountUpdate(accountRepository.save(existingAccount));
+    }
+
+    public void deleteAccountId(Long id) {
+        Account existingAccount = accountRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Client", "id", id));
+        accountRepository.delete(existingAccount);
+    }
+
 }
+
 
 
